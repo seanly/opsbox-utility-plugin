@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div>
+    Opsbox Utility Plugin - A utility plugin providing various helper functions for Jenkins pipelines
+</div>
