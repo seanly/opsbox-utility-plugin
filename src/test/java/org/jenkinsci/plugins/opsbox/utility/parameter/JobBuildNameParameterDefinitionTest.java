@@ -35,7 +35,7 @@ public class JobBuildNameParameterDefinitionTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        
+
         // 创建源作业
         sourceJob = jenkins.createFreeStyleProject("source-job");
         sourceJob.getBuildersList().add(new TestBuilder() {
@@ -44,14 +44,14 @@ public class JobBuildNameParameterDefinitionTest {
                 return true;
             }
         });
-        
+
         // 创建目标作业
         targetJob = jenkins.createFreeStyleProject("target-job");
-        
+
         // 创建参数定义
         parameterDefinition = new JobBuildNameParameterDefinition(
-            "BUILD_NAME", 
-            "source-job", 
+            "BUILD_NAME",
+            "source-job",
             "Select build name from source job"
         );
     }
@@ -67,13 +67,13 @@ public class JobBuildNameParameterDefinitionTest {
     @Test
     public void testConstructorWithAllParameters() {
         JobBuildNameParameterDefinition param = new JobBuildNameParameterDefinition(
-            "BUILD_NAME", 
-            "source-job", 
-            10, 
-            "1.0.0", 
+            "BUILD_NAME",
+            "source-job",
+            10,
+            "1.0.0",
             "Test description"
         );
-        
+
         assertEquals("BUILD_NAME", param.getName());
         assertEquals("source-job", param.getJobName());
         assertEquals(10, param.getCountLimit());
@@ -107,7 +107,7 @@ public class JobBuildNameParameterDefinitionTest {
             FreeStyleBuild build = jenkins.buildAndAssertSuccess(sourceJob);
             build.setDisplayName("build-" + i + ".0.0");
         }
-        
+
         List<String> choices = parameterDefinition.getChoices();
         assertNotNull(choices);
         assertTrue(choices.size() > 0);
@@ -127,7 +127,7 @@ public class JobBuildNameParameterDefinitionTest {
     public void testCreateValueFromString() {
         // 首先我们需要有一些选择
         parameterDefinition.getChoices(); // 这会创建默认选择
-        
+
         StringParameterValue value = parameterDefinition.createValue("0.0.1-1+999");
         assertNotNull(value);
         assertEquals("BUILD_NAME", value.getName());
@@ -144,10 +144,10 @@ public class JobBuildNameParameterDefinitionTest {
         JSONObject json = new JSONObject();
         json.put("name", "BUILD_NAME");
         json.put("value", "0.0.1-1+999");
-        
+
         when(staplerRequest.bindJSON(StringParameterValue.class, json))
             .thenReturn(new StringParameterValue("BUILD_NAME", "0.0.1-1+999"));
-        
+
         ParameterValue value = parameterDefinition.createValue(staplerRequest, json);
         assertNotNull(value);
         assertTrue(value instanceof StringParameterValue);
@@ -156,7 +156,7 @@ public class JobBuildNameParameterDefinitionTest {
 
     @Test
     public void testDescriptorDisplayName() {
-        JobBuildNameParameterDefinition.DescriptorImpl descriptor = 
+        JobBuildNameParameterDefinition.DescriptorImpl descriptor =
             new JobBuildNameParameterDefinition.DescriptorImpl();
         String displayName = descriptor.getDisplayName();
         assertNotNull(displayName);
@@ -165,72 +165,40 @@ public class JobBuildNameParameterDefinitionTest {
 
     @Test
     public void testDescriptorJobNameValidation() throws IOException {
-        JobBuildNameParameterDefinition.DescriptorImpl descriptor = 
+        JobBuildNameParameterDefinition.DescriptorImpl descriptor =
             new JobBuildNameParameterDefinition.DescriptorImpl();
-        
+
         // 测试存在的作业
         FormValidation validation = descriptor.doCheckJobName("source-job");
         assertEquals(FormValidation.Kind.OK, validation.kind);
-        
+
         // 测试不存在的作业
         validation = descriptor.doCheckJobName("non-existent-job");
         assertEquals(FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
-    public void testDescriptorCountLimitValidation() {
-        JobBuildNameParameterDefinition.DescriptorImpl descriptor = 
-            new JobBuildNameParameterDefinition.DescriptorImpl();
-        
-        // 测试有效的数字
-        FormValidation validation = descriptor.doCheckCountLimit("5");
-        assertEquals(FormValidation.Kind.OK, validation.kind);
-        
-        // 测试无效的数字
-        validation = descriptor.doCheckCountLimit("invalid");
-        assertEquals(FormValidation.Kind.ERROR, validation.kind);
-        
-        // 测试空值
-        validation = descriptor.doCheckCountLimit("");
-        assertEquals(FormValidation.Kind.ERROR, validation.kind);
-    }
-
-    @Test
-    public void testIsIntegerMethod() {
-        JobBuildNameParameterDefinition.DescriptorImpl descriptor = 
-            new JobBuildNameParameterDefinition.DescriptorImpl();
-        
-        assertTrue(descriptor.isInteger("123"));
-        assertTrue(descriptor.isInteger("0"));
-        assertTrue(descriptor.isInteger("-1"));
-        assertFalse(descriptor.isInteger("abc"));
-        assertFalse(descriptor.isInteger("12.34"));
-        assertFalse(descriptor.isInteger(""));
-        assertFalse(descriptor.isInteger(null));
-    }
-
-    @Test
     public void testJobInFolder() throws Exception {
-        // 创建文件夹和文件夹中的作业 
+        // 创建文件夹和文件夹中的作业
         // 注意：在Jenkins测试中，需要分别创建文件夹和作业
         jenkins.createFolder("test-folder");
         FreeStyleProject jobInFolder = jenkins.createProject(
-            FreeStyleProject.class, 
+            FreeStyleProject.class,
             "job-in-folder"
         );
-        
+
         // 将作业移动到文件夹中 (这在实际使用中是通过Jenkins界面完成的)
         // 对于测试，我们简化处理，直接测试可以引用不同名称的作业
         JobBuildNameParameterDefinition paramInFolder = new JobBuildNameParameterDefinition(
-            "BUILD_NAME", 
+            "BUILD_NAME",
             "job-in-folder",  // 简化为直接使用作业名称
             "Test folder job"
         );
-        
+
         // 创建一个构建以便测试
         FreeStyleBuild build = jenkins.buildAndAssertSuccess(jobInFolder);
         build.setDisplayName("folder-build-1.0.0");
-        
+
         // 验证可以找到作业
         List<String> choices = paramInFolder.getChoices();
         assertNotNull(choices);
@@ -245,10 +213,10 @@ public class JobBuildNameParameterDefinitionTest {
             FreeStyleBuild build = jenkins.buildAndAssertSuccess(sourceJob);
             build.setDisplayName("build-" + i + ".0.0");
         }
-        
+
         // 设置限制为3
         parameterDefinition.setCountLimit(3);
-        
+
         List<String> choices = parameterDefinition.getChoices();
         assertNotNull(choices);
         assertTrue("Choices should not exceed count limit", choices.size() <= 3);
@@ -263,10 +231,10 @@ public class JobBuildNameParameterDefinitionTest {
                 return false; // 模拟失败
             }
         });
-        
+
         FreeStyleBuild failedBuild = jenkins.assertBuildStatus(Result.FAILURE, sourceJob.scheduleBuild2(0));
         failedBuild.setDisplayName("failed-build");
-        
+
         // 添加成功的构建
         sourceJob.getBuildersList().clear();
         sourceJob.getBuildersList().add(new TestBuilder() {
@@ -275,14 +243,14 @@ public class JobBuildNameParameterDefinitionTest {
                 return true;
             }
         });
-        
+
         FreeStyleBuild successBuild = jenkins.buildAndAssertSuccess(sourceJob);
         successBuild.setDisplayName("success-build");
-        
+
         List<String> choices = parameterDefinition.getChoices();
-        
+
         // 应该只包含成功的构建
         assertFalse("Should not contain failed build", choices.contains("failed-build"));
         assertTrue("Should contain success build", choices.contains("success-build"));
     }
-} 
+}

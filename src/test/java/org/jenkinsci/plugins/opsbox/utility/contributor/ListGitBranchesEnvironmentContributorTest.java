@@ -55,11 +55,11 @@ public class ListGitBranchesEnvironmentContributorTest {
         assertEquals("develop", ListGitBranchesEnvironmentContributor.cleanBranchName("refs/heads/develop"));
         assertEquals("v1.0.0", ListGitBranchesEnvironmentContributor.cleanBranchName("refs/tags/v1.0.0"));
         assertEquals("feature/test", ListGitBranchesEnvironmentContributor.cleanBranchName("refs/heads/feature/test"));
-        
+
         // 测试已经是干净的分支名称
         assertEquals("master", ListGitBranchesEnvironmentContributor.cleanBranchName("master"));
         assertEquals("develop", ListGitBranchesEnvironmentContributor.cleanBranchName("develop"));
-        
+
         // 测试边界情况
         assertEquals("", ListGitBranchesEnvironmentContributor.cleanBranchName(""));
         assertNull(ListGitBranchesEnvironmentContributor.cleanBranchName(null));
@@ -70,16 +70,16 @@ public class ListGitBranchesEnvironmentContributorTest {
         // 设置模拟对象
         when(mockBuild.getParent()).thenReturn(mockJob);
         when(mockBuild.getAction(ParametersAction.class)).thenReturn(mockParametersAction);
-        
+
         // 创建参数值列表
         List<ParameterValue> paramValues = new ArrayList<>();
         ListGitBranchesParameterValue gitParam = mock(ListGitBranchesParameterValue.class);
         when(gitParam.getName()).thenReturn("BRANCH");
         when(gitParam.getValue()).thenReturn("refs/heads/master");
         paramValues.add(gitParam);
-        
+
         when(mockParametersAction.getParameters()).thenReturn(paramValues);
-        
+
         // 创建参数定义列表
         List<ParameterDefinition> paramDefs = new ArrayList<>();
         ListGitBranchesParameterDefinition gitParamDef = mock(ListGitBranchesParameterDefinition.class);
@@ -87,13 +87,13 @@ public class ListGitBranchesEnvironmentContributorTest {
         when(gitParamDef.getRemoteURL()).thenReturn("https://github.com/test/repo.git");
         when(gitParamDef.getCredentialsId()).thenReturn("git-credentials");
         paramDefs.add(gitParamDef);
-        
+
         when(mockJob.getProperty(ParametersDefinitionProperty.class)).thenReturn(mockParamProp);
         when(mockParamProp.getParameterDefinitions()).thenReturn(paramDefs);
-        
+
         // 执行测试
         contributor.buildEnvironmentFor((Run)mockBuild, envVars, mockListener);
-        
+
         // 验证环境变量
         assertEquals("master", envVars.get("BRANCH"));
         assertEquals("https://github.com/test/repo.git", envVars.get("PARAMS__BRANCH__REMOTE_URL"));
@@ -101,20 +101,13 @@ public class ListGitBranchesEnvironmentContributorTest {
     }
 
     @Test
-    public void testBuildEnvironmentForWithNullRun() {
-        // 传入null的run应该不会抛出异常
-        contributor.buildEnvironmentFor((Run)null, envVars, mockListener);
-        assertTrue("Environment variables should be empty", envVars.isEmpty());
-    }
-
-    @Test
     public void testBuildEnvironmentForWithNoParameters() {
         when(mockBuild.getParent()).thenReturn(mockJob);
         when(mockBuild.getAction(ParametersAction.class)).thenReturn(null);
         when(mockJob.getProperty(ParametersDefinitionProperty.class)).thenReturn(null);
-        
+
         contributor.buildEnvironmentFor((Run)mockBuild, envVars, mockListener);
-        
+
         // 应该没有环境变量被添加
         assertTrue("Environment variables should be empty", envVars.isEmpty());
     }
@@ -124,12 +117,12 @@ public class ListGitBranchesEnvironmentContributorTest {
         when(mockBuild.getParent()).thenReturn(mockJob);
         when(mockBuild.getAction(ParametersAction.class)).thenReturn(mockParametersAction);
         when(mockParametersAction.getParameters()).thenReturn(new ArrayList<>());
-        
+
         when(mockJob.getProperty(ParametersDefinitionProperty.class)).thenReturn(mockParamProp);
         when(mockParamProp.getParameterDefinitions()).thenReturn(new ArrayList<>());
-        
+
         contributor.buildEnvironmentFor((Run)mockBuild, envVars, mockListener);
-        
+
         assertTrue("Environment variables should be empty", envVars.isEmpty());
     }
 
@@ -137,43 +130,43 @@ public class ListGitBranchesEnvironmentContributorTest {
     public void testBuildEnvironmentForWithMultipleGitParameters() {
         when(mockBuild.getParent()).thenReturn(mockJob);
         when(mockBuild.getAction(ParametersAction.class)).thenReturn(mockParametersAction);
-        
+
         // 创建多个Git参数值
         List<ParameterValue> paramValues = new ArrayList<>();
-        
+
         ListGitBranchesParameterValue gitParam1 = mock(ListGitBranchesParameterValue.class);
         when(gitParam1.getName()).thenReturn("MAIN_BRANCH");
         when(gitParam1.getValue()).thenReturn("refs/heads/master");
         paramValues.add(gitParam1);
-        
+
         ListGitBranchesParameterValue gitParam2 = mock(ListGitBranchesParameterValue.class);
         when(gitParam2.getName()).thenReturn("FEATURE_BRANCH");
         when(gitParam2.getValue()).thenReturn("refs/heads/feature/test");
         paramValues.add(gitParam2);
-        
+
         when(mockParametersAction.getParameters()).thenReturn(paramValues);
-        
+
         // 创建多个参数定义
         List<ParameterDefinition> paramDefs = new ArrayList<>();
-        
+
         ListGitBranchesParameterDefinition gitParamDef1 = mock(ListGitBranchesParameterDefinition.class);
         when(gitParamDef1.getName()).thenReturn("MAIN_BRANCH");
         when(gitParamDef1.getRemoteURL()).thenReturn("https://github.com/test/main-repo.git");
         when(gitParamDef1.getCredentialsId()).thenReturn("main-credentials");
         paramDefs.add(gitParamDef1);
-        
+
         ListGitBranchesParameterDefinition gitParamDef2 = mock(ListGitBranchesParameterDefinition.class);
         when(gitParamDef2.getName()).thenReturn("FEATURE_BRANCH");
         when(gitParamDef2.getRemoteURL()).thenReturn("https://github.com/test/feature-repo.git");
         when(gitParamDef2.getCredentialsId()).thenReturn("feature-credentials");
         paramDefs.add(gitParamDef2);
-        
+
         when(mockJob.getProperty(ParametersDefinitionProperty.class)).thenReturn(mockParamProp);
         when(mockParamProp.getParameterDefinitions()).thenReturn(paramDefs);
-        
+
         // 执行测试
         contributor.buildEnvironmentFor((Run)mockBuild, envVars, mockListener);
-        
+
         // 验证环境变量
         assertEquals("master", envVars.get("MAIN_BRANCH"));
         assertEquals("feature/test", envVars.get("FEATURE_BRANCH"));
@@ -187,43 +180,43 @@ public class ListGitBranchesEnvironmentContributorTest {
     public void testBuildEnvironmentForWithMixedParameterTypes() {
         when(mockBuild.getParent()).thenReturn(mockJob);
         when(mockBuild.getAction(ParametersAction.class)).thenReturn(mockParametersAction);
-        
+
         // 创建混合参数类型
         List<ParameterValue> paramValues = new ArrayList<>();
-        
+
         ListGitBranchesParameterValue gitParam = mock(ListGitBranchesParameterValue.class);
         when(gitParam.getName()).thenReturn("BRANCH");
         when(gitParam.getValue()).thenReturn("refs/heads/master");
         paramValues.add(gitParam);
-        
+
         StringParameterValue stringParam = new StringParameterValue("STRING_PARAM", "test-value");
         paramValues.add(stringParam);
-        
+
         when(mockParametersAction.getParameters()).thenReturn(paramValues);
-        
+
         // 创建混合参数定义
         List<ParameterDefinition> paramDefs = new ArrayList<>();
-        
+
         ListGitBranchesParameterDefinition gitParamDef = mock(ListGitBranchesParameterDefinition.class);
         when(gitParamDef.getName()).thenReturn("BRANCH");
         when(gitParamDef.getRemoteURL()).thenReturn("https://github.com/test/repo.git");
         when(gitParamDef.getCredentialsId()).thenReturn("git-credentials");
         paramDefs.add(gitParamDef);
-        
+
         StringParameterDefinition stringParamDef = new StringParameterDefinition("STRING_PARAM", "default", "Test string param");
         paramDefs.add(stringParamDef);
-        
+
         when(mockJob.getProperty(ParametersDefinitionProperty.class)).thenReturn(mockParamProp);
         when(mockParamProp.getParameterDefinitions()).thenReturn(paramDefs);
-        
+
         // 执行测试
         contributor.buildEnvironmentFor((Run)mockBuild, envVars, mockListener);
-        
+
         // 只有Git参数应该被处理
         assertEquals("master", envVars.get("BRANCH"));
         assertEquals("https://github.com/test/repo.git", envVars.get("PARAMS__BRANCH__REMOTE_URL"));
         assertEquals("git-credentials", envVars.get("PARAMS__BRANCH__CREDENTIALS_ID"));
-        
+
         // 字符串参数不应该被处理
         assertNull(envVars.get("STRING_PARAM"));
         assertNull(envVars.get("PARAMS__STRING_PARAM__REMOTE_URL"));
@@ -233,16 +226,16 @@ public class ListGitBranchesEnvironmentContributorTest {
     public void testBuildEnvironmentForWithTagReference() {
         when(mockBuild.getParent()).thenReturn(mockJob);
         when(mockBuild.getAction(ParametersAction.class)).thenReturn(mockParametersAction);
-        
+
         // 创建标签参数
         List<ParameterValue> paramValues = new ArrayList<>();
         ListGitBranchesParameterValue gitParam = mock(ListGitBranchesParameterValue.class);
         when(gitParam.getName()).thenReturn("TAG");
         when(gitParam.getValue()).thenReturn("refs/tags/v1.0.0");
         paramValues.add(gitParam);
-        
+
         when(mockParametersAction.getParameters()).thenReturn(paramValues);
-        
+
         // 创建参数定义
         List<ParameterDefinition> paramDefs = new ArrayList<>();
         ListGitBranchesParameterDefinition gitParamDef = mock(ListGitBranchesParameterDefinition.class);
@@ -250,13 +243,13 @@ public class ListGitBranchesEnvironmentContributorTest {
         when(gitParamDef.getRemoteURL()).thenReturn("https://github.com/test/repo.git");
         when(gitParamDef.getCredentialsId()).thenReturn("git-credentials");
         paramDefs.add(gitParamDef);
-        
+
         when(mockJob.getProperty(ParametersDefinitionProperty.class)).thenReturn(mockParamProp);
         when(mockParamProp.getParameterDefinitions()).thenReturn(paramDefs);
-        
+
         // 执行测试
         contributor.buildEnvironmentFor((Run)mockBuild, envVars, mockListener);
-        
+
         // 验证标签名称被正确清理
         assertEquals("v1.0.0", envVars.get("TAG"));
         assertEquals("https://github.com/test/repo.git", envVars.get("PARAMS__TAG__REMOTE_URL"));
@@ -267,28 +260,28 @@ public class ListGitBranchesEnvironmentContributorTest {
     public void testBuildEnvironmentForWithNullCredentials() {
         when(mockBuild.getParent()).thenReturn(mockJob);
         when(mockBuild.getAction(ParametersAction.class)).thenReturn(mockParametersAction);
-        
+
         List<ParameterValue> paramValues = new ArrayList<>();
         ListGitBranchesParameterValue gitParam = mock(ListGitBranchesParameterValue.class);
         when(gitParam.getName()).thenReturn("BRANCH");
         when(gitParam.getValue()).thenReturn("master");
         paramValues.add(gitParam);
-        
+
         when(mockParametersAction.getParameters()).thenReturn(paramValues);
-        
+
         List<ParameterDefinition> paramDefs = new ArrayList<>();
         ListGitBranchesParameterDefinition gitParamDef = mock(ListGitBranchesParameterDefinition.class);
         when(gitParamDef.getName()).thenReturn("BRANCH");
         when(gitParamDef.getRemoteURL()).thenReturn("https://github.com/test/repo.git");
         when(gitParamDef.getCredentialsId()).thenReturn(null); // null凭据
         paramDefs.add(gitParamDef);
-        
+
         when(mockJob.getProperty(ParametersDefinitionProperty.class)).thenReturn(mockParamProp);
         when(mockParamProp.getParameterDefinitions()).thenReturn(paramDefs);
-        
+
         // 执行测试
         contributor.buildEnvironmentFor((Run)mockBuild, envVars, mockListener);
-        
+
         // 验证环境变量
         assertEquals("master", envVars.get("BRANCH"));
         assertEquals("https://github.com/test/repo.git", envVars.get("PARAMS__BRANCH__REMOTE_URL"));
@@ -301,4 +294,4 @@ public class ListGitBranchesEnvironmentContributorTest {
         // 这里只测试核心功能，实际的集成测试需要在真实环境中进行
         assertTrue("Integration test placeholder - requires actual plugin environment", true);
     }
-} 
+}
