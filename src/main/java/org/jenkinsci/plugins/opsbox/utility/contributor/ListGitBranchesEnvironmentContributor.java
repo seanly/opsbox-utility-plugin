@@ -61,27 +61,18 @@ public class ListGitBranchesEnvironmentContributor extends EnvironmentContributo
 
     private Map<String, String> getParametersConfigs(Run<?, ?> run) {
         Map<String, String> params = Maps.newHashMap();
-        
-        if (run == null) {
-            LOGGER.warning("Run is null.");
-            return params;
-        }
 
         Job<?, ?> job = run.getParent();
-        if (job == null) {
-            LOGGER.info("Job is null.");
-            return params;
-        }
 
         ParametersDefinitionProperty paramProp = job.getProperty(ParametersDefinitionProperty.class);
         if (paramProp == null) {
-            LOGGER.info("Job does not have any parameter definitions.");
+            LOGGER.fine("Job does not have any parameter definitions.");
             return params;
         }
 
         List<ParameterDefinition> parameterDefinitions = paramProp.getParameterDefinitions();
         if (parameterDefinitions == null || parameterDefinitions.isEmpty()) {
-            LOGGER.info("No parameters defined in the job.");
+            LOGGER.fine("No parameters defined in the job.");
             return params;
         }
 
@@ -92,7 +83,7 @@ public class ListGitBranchesEnvironmentContributor extends EnvironmentContributo
                 String remoteUrl = gitParamDef.getRemoteURL();
                 String credentialsId = gitParamDef.getCredentialsId();
 
-                LOGGER.info("Found Git remote URL: " + remoteUrl);
+                LOGGER.fine("Found Git remote URL: " + remoteUrl);
                 
                 // 只有非null值才添加到环境变量中
                 if (remoteUrl != null) {

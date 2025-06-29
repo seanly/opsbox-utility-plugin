@@ -8,7 +8,6 @@ import jenkins.model.Jenkins;
 import lombok.Getter;
 import net.sf.json.JSONObject;
 import org.jenkinsci.Symbol;
-import org.jvnet.localizer.ResourceBundleHolder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
@@ -140,11 +139,11 @@ public class JobBuildNameParameterDefinition extends SimpleParameterDefinition {
         @Nonnull
         @Override
         public String getDisplayName() {
-            return ResourceBundleHolder.get(JobBuildNameParameterDefinition.class).format("displayName");
+            return Messages.JobBuildNameParameterDefinition_DisplayName();
         }
 
         public FormValidation doCheckJobName(@QueryParameter String jobName) {
-            String errorMsg = "Job is not exists.";
+            String errorMsg = "Job doesn't exist.";
 
             Job job = JobBuildNameParameterDefinition.find(jobName, Job.class);
             if (job == null) {
@@ -152,23 +151,6 @@ public class JobBuildNameParameterDefinition extends SimpleParameterDefinition {
             } else {
                 return FormValidation.ok();
             }
-        }
-
-        public FormValidation doCheckCountLimit(@QueryParameter String countLimit) {
-            if(isInteger(countLimit)) {
-                return FormValidation.ok();
-            } else {
-                return FormValidation.error("Current value is not integer");
-            }
-        }
-
-        boolean isInteger(String s) {
-            try {
-                Integer.parseInt(s);
-            } catch(NumberFormatException | NullPointerException e) {
-                return false;
-            }
-            return true;
         }
     }
 }
