@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.opsbox.utility.logsummary;
 
+import org.jenkinsci.plugins.opsbox.utility.contributor.ListGitBranchesEnvironmentContributor;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -7,6 +8,7 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,6 +16,7 @@ import java.util.stream.Stream;
  * 日志分析器 - 使用Stream API优化性能
  */
 public class LogAnalyzer {
+    private static final Logger LOGGER = Logger.getLogger(LogAnalyzer.class.getName());
 
     public List<LogAnalysisRule> rules;
 
@@ -31,9 +34,9 @@ public class LogAnalyzer {
 
         // 使用ConcurrentHashMap提高并发性能
         Map<String, LogAnalysisResult> results = new ConcurrentHashMap<>();
-        
+
         // 预初始化结果映射
-        rules.forEach(rule -> 
+        rules.forEach(rule ->
             results.put(rule.getName(), new LogAnalysisResult(rule.getName(), rule.getShowName()))
         );
 
@@ -46,7 +49,7 @@ public class LogAnalyzer {
 
         // 将日志内容分割成行并并行处理
         List<String> logLines = Arrays.asList(logContent.split("\n"));
-        
+
         // 使用Stream API并行处理日志行
         logLines.parallelStream()
             .filter(line -> line != null && !line.trim().isEmpty())
@@ -78,9 +81,9 @@ public class LogAnalyzer {
 
         // 使用ConcurrentHashMap提高并发性能
         Map<String, LogAnalysisResult> results = new ConcurrentHashMap<>();
-        
+
         // 预初始化结果映射
-        rules.forEach(rule -> 
+        rules.forEach(rule ->
             results.put(rule.getName(), new LogAnalysisResult(rule.getName(), rule.getShowName()))
         );
 
@@ -91,7 +94,7 @@ public class LogAnalyzer {
                 if (line.trim().isEmpty()) {
                     continue;
                 }
-                
+
                 // 对每个规则检查匹配
                 for (LogAnalysisRule rule : rules) {
                     if (rule.matches(line)) {
@@ -120,9 +123,9 @@ public class LogAnalyzer {
 
         // 使用ConcurrentHashMap提高并发性能
         Map<String, LogAnalysisResult> results = new ConcurrentHashMap<>();
-        
+
         // 预初始化结果映射
-        rules.forEach(rule -> 
+        rules.forEach(rule ->
             results.put(rule.getName(), new LogAnalysisResult(rule.getName(), rule.getShowName()))
         );
 
@@ -165,9 +168,9 @@ public class LogAnalyzer {
         }
 
         Map<String, LogAnalysisResult> results = new HashMap<>();
-        
+
         // 预初始化结果映射
-        rules.forEach(rule -> 
+        rules.forEach(rule ->
             results.put(rule.getName(), new LogAnalysisResult(rule.getName(), rule.getShowName()))
         );
 
@@ -225,6 +228,7 @@ public class LogAnalyzer {
                 return new LogAnalyzer(rules);
             }
         } catch (Exception e) {
+            LOGGER.warning(e.getMessage());
             // 如果YAML解析失败，返回默认配置
             return createDefaultAnalyzer();
         }

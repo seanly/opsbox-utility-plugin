@@ -1,0 +1,131 @@
+# Jenkins Pipeline Log Analysis Rules
+# Rules for extracting key information from Jenkins pipeline logs
+
+# Docker Image Version - Extract image tags and versions
+docker_image_version:
+  search:
+    - /DOCKER_TAG=([^\\s]+)/
+    - /docker build.*-t ([^\\s]+)/
+    - /docker push ([^\\s]+)/
+    - /image updated.*([^\\s]+)/
+    - /([a-zA-Z0-9.-]+:[a-zA-Z0-9.-]+)/
+  showName: Docker Image Version
+
+# Repository Information - Extract Git repository details
+repository_info:
+  search:
+    - /Fetching changes from.*([^\\s]+\.git)/
+    - /Cloning repository ([^\\s]+)/
+    - /git@([^\\s]+)/
+    - /https://([^\\s]+)/
+    - /ssh://([^\\s]+)/
+    - /Commit message: "([^"]+)"/
+    - /Checking out Revision ([a-f0-9]+)/
+  showName: Repository Information
+
+# Environment Information - Extract deployment environment
+environment_info:
+  search:
+    - /deploy app to ([^\\s]+)/
+    - /-n ([^\\s]+)/
+    - /APP_ENV=([^\\s]+)/
+    - /BRANCH_NAME=([^\\s]+)/
+    - /Running on ([^\\s]+)/
+    - /namespace ([^\\s]+)/
+  showName: Environment Information
+
+# Build Information - Extract build details
+build_info:
+  search:
+    - /APP_VERSION=([^\\s]+)/
+    - /BUILD SUCCESS/
+    - /BUILD FAILURE/
+    - /Total time: ([^\\s]+)/
+    - /Started by user ([^\\s]+)/
+    - /[Pipeline] stage.*\\(([^)]+)\\)/
+    - /Finished: ([^\\s]+)/
+  showName: Build Information
+
+# Deployment Status - Extract deployment results
+deployment_status:
+  search:
+    - /deployment.*successfully rolled out/
+    - /deployment.*failed/
+    - /kubectl rollout status/
+    - /image updated/
+    - /deployment.*updated/
+    - /deployment.*created/
+  showName: Deployment Status
+
+# Error Messages - Extract error information
+error_messages:
+  search:
+    - /ERROR:/
+    - /error:/
+    - /FAILED/
+    - /failed/
+    - /Exception/
+    - /Error/
+    - /FATAL/
+    - /fatal/
+  showName: Error Messages
+
+# Warning Messages - Extract warning information
+warning_messages:
+  search:
+    - /WARNING:/
+    - /Warning:/
+    - /warning:/
+    - /WARN:/
+    - /warn:/
+    - /Deprecated/
+    - /deprecated/
+  showName: Warning Messages
+
+# Docker Operations - Extract Docker-related operations
+docker_operations:
+  search:
+    - /docker login/
+    - /docker build/
+    - /docker push/
+    - /docker logout/
+    - /Login Succeeded/
+    - /Pushed/
+    - /Layer already exists/
+  showName: Docker Operations
+
+# Kubernetes Operations - Extract Kubernetes-related operations
+kubernetes_operations:
+  search:
+    - /kubectl set image/
+    - /kubectl rollout status/
+    - /kubectl apply/
+    - /kubectl create/
+    - /kubectl delete/
+    - /deployment.*apps/
+  showName: Kubernetes Operations
+
+# Git Operations - Extract Git-related operations
+git_operations:
+  search:
+    - /git fetch/
+    - /git checkout/
+    - /git clone/
+    - /git ls-remote/
+    - /git rev-parse/
+    - /git config/
+    - /Commit message:/
+    - /Checking out Revision/
+  showName: Git Operations
+
+# Maven Operations - Extract Maven build information
+maven_operations:
+  search:
+    - /mvnw.*clean install/
+    - /mvn.*clean install/
+    - /[INFO] Building/
+    - /[INFO] BUILD SUCCESS/
+    - /[INFO] BUILD FAILURE/
+    - /[INFO] Total time:/
+    - /[INFO] Downloading from/
+  showName: Maven Operations 

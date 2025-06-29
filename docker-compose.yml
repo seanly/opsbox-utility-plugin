@@ -1,0 +1,6 @@
+
+services:
+  opsbox-utility-plugin:
+    build: 
+      context: ./
+    image: seanly/opsbox-utility-plugin:main

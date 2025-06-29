@@ -1,0 +1,105 @@
+# Jenkins Pipeline Key Information Extraction Rules
+# Focused rules for extracting specific information from Jenkins pipeline logs
+
+# Docker Image Version - Extract image tags and versions (excluding leading +)
+docker_image_version:
+  search:
+    - /DOCKER_TAG=([a-zA-Z0-9.-]+)/
+    - /docker build.*-t ([a-zA-Z0-9./:-]+)/
+    - /docker push ([a-zA-Z0-9./:-]+)/
+    - /image updated.*([a-zA-Z0-9./:-]+)/
+    - /([a-zA-Z0-9./:-]+:[a-zA-Z0-9.-]+)/
+  showName: Docker Image Version
+
+# Code Repository - Extract Git repository URLs and commit info
+code_repository:
+  search:
+    - /Fetching changes from.*([a-zA-Z0-9./@:-]+\.git)/
+    - /Cloning repository ([a-zA-Z0-9./@:-]+)/
+    - /git@([a-zA-Z0-9./:-]+)/
+    - /https://([a-zA-Z0-9./:-]+)/
+    - /ssh://([a-zA-Z0-9./:-]+)/
+    - /Commit message: "([^"]+)"/
+    - /Checking out Revision ([a-f0-9]+)/
+    - /git rev-parse --short HEAD/
+  showName: Code Repository
+
+# Environment Information - Extract deployment environment
+environment_info:
+  search:
+    - /deploy app to ([a-zA-Z0-9-]+)/
+    - /-n ([a-zA-Z0-9-]+)/
+    - /APP_ENV=([a-zA-Z0-9]+)/
+    - /BRANCH_NAME=([a-zA-Z0-9-]+)/
+    - /Running on ([a-zA-Z0-9-]+)/
+    - /namespace ([a-zA-Z0-9-]+)/
+    - /kubectl set image.*-n ([a-zA-Z0-9-]+)/
+  showName: Environment Information
+
+# Build Version - Extract build version and commit information
+build_version:
+  search:
+    - /APP_VERSION=([a-zA-Z0-9.]+)/
+    - /_appVersion=([a-zA-Z0-9.]+)/
+    - /_gitShortCommitId=([a-f0-9]+)/
+    - /_dateStr=([0-9]+)/
+    - /ai-gateway-server-v([a-zA-Z0-9.]+)/
+  showName: Build Version
+
+# Deployment Target - Extract deployment target information
+deployment_target:
+  search:
+    - /kubectl set image deployment/([a-zA-Z0-9-]+)/
+    - /deployment\.apps/([a-zA-Z0-9-]+)/
+    - /deployment "([a-zA-Z0-9-]+)" successfully rolled out/
+    - /deployment "([a-zA-Z0-9-]+)" updated/
+  showName: Deployment Target
+
+# Registry Information - Extract container registry details
+registry_info:
+  search:
+    - /docker login.*([a-zA-Z0-9./:-]+)/
+    - /crpi-[a-zA-Z0-9]+\.cn-[a-zA-Z0-9]+\.personal\.cr\.aliyuncs\.com/
+    - /registry\.cn-[a-zA-Z0-9]+\.aliyuncs\.com/
+    - /([a-zA-Z0-9./:-]+\.aliyuncs\.com)/
+  showName: Registry Information
+
+# Build Status - Extract build success/failure status
+build_status:
+  search:
+    - /BUILD SUCCESS/
+    - /BUILD FAILURE/
+    - /Finished: SUCCESS/
+    - /Finished: FAILURE/
+    - /deployment.*successfully rolled out/
+    - /deployment.*failed/
+  showName: Build Status
+
+# Pipeline Stages - Extract pipeline stage information
+pipeline_stages:
+  search:
+    - /\[Pipeline\] stage/
+    - /\[Pipeline\] \{ \(([^)]+)\)/
+    - /\[Pipeline\] \}/
+    - /\[Pipeline\] \/\/ stage/
+  showName: Pipeline Stages
+
+# Maven Build Info - Extract Maven build details
+maven_build_info:
+  search:
+    - /\[INFO\] Building ([a-zA-Z0-9.-]+)/
+    - /\[INFO\] Total time: ([0-9.]+ s)/
+    - /\[INFO\] BUILD SUCCESS/
+    - /\[INFO\] BUILD FAILURE/
+    - /\.\/mvnw -B -e -U clean install/
+  showName: Maven Build Info
+
+# Docker Build Info - Extract Docker build details
+docker_build_info:
+  search:
+    - /docker build.*--build-arg/
+    - /#([0-9]+) \[([a-zA-Z0-9-]+) ([0-9]+/[0-9]+)\]/
+    - /DONE ([0-9.]+s)/
+    - /Layer already exists/
+    - /Pushed/
+  showName: Docker Build Info 
