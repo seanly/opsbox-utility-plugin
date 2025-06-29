@@ -113,23 +113,16 @@ public class JobBuildNameParameterDefinition extends SimpleParameterDefinition {
         return new StringParameterValue(getName(), defaultValue == null ? choices.get(0) : defaultValue, getDescription());
     }
 
-    private StringParameterValue checkValue(StringParameterValue value) {
-        List<String> choices = getChoices();
-        if (!choices.contains(value.getValue()))
-            throw new IllegalArgumentException("Illegal choice for parameter " + getName() + ": " + value.getValue());
-        return value;
-    }
-
     @Override
     public ParameterValue createValue(StaplerRequest req, JSONObject jo) {
         StringParameterValue value = req.bindJSON(StringParameterValue.class, jo);
         value.setDescription(getDescription());
-        return checkValue(value);
+        return value;
     }
 
     @Override
     public StringParameterValue createValue(String value) {
-        return checkValue(new StringParameterValue(getName(), value, getDescription()));
+        return new StringParameterValue(getName(), value, getDescription());
     }
 
     @Extension

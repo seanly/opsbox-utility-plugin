@@ -46,10 +46,6 @@ public class ListGitBranchesEnvironmentContributor extends EnvironmentContributo
         // 获取参数化构建中的参数值
         Map<String, String> params = Maps.newHashMap();
 
-        if (!(run instanceof AbstractBuild)) {
-            return params;
-        }
-
         ParametersAction parametersAction = run.getAction(ParametersAction.class);
         if (parametersAction != null) {
             for (ParameterValue param : parametersAction.getParameters()) {
