@@ -4,30 +4,28 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.78</version>
+        <version>5.9</version>
         <relativePath />
     </parent>
     <properties>
         <revision>1.0.0</revision>
         <changelist>999999-SNAPSHOT</changelist>
 
-        <jenkins-tools-bom.artifactId>bom-2.414.x</jenkins-tools-bom.artifactId>
-        <jenkins-tools-bom.version>2805.v4398b_43dfc18</jenkins-tools-bom.version>
-
-        <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jenkins-tools-bom.artifactId>bom-2.479.x</jenkins-tools-bom.artifactId>
+        <jenkins-tools-bom.version>3875.v1df09947cde6</jenkins-tools-bom.version>
         <lombok.version>1.18.30</lombok.version>
 
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
-        <jenkins.baseline>2.414</jenkins.baseline>
+        <jenkins.baseline>2.479</jenkins.baseline>
         <jenkins.version>${jenkins.baseline}.3</jenkins.version>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     </properties>
 
     <name>Opsbox Utility Plugin</name>
     <groupId>io.jenkins.plugins</groupId>
-    <artifactId>opsbox-utility-plugin</artifactId>
+    <artifactId>opsbox-utility</artifactId>
     <version>${revision}.${changelist}</version>
     <packaging>hpi</packaging>
     <description>A utility plugin providing various helper functions for Jenkins pipelines</description>
@@ -40,18 +38,6 @@
         </license>
     </licenses>
 
-    <!-- If you want this to appear on the wiki page:    -->
-    <developers>
-      <developer>
-        <id>seanly</id>
-        <name>Seanly Liu</name>
-        <email>seanly.me@gmail.com</email>
-        <roles>
-          <role>maintainer</role>
-        </roles>
-      </developer>
-    </developers>
-
     <issueManagement>
         <system>GitHub</system>
         <url>https://github.com/${gitHubRepo}</url>
@@ -59,7 +45,7 @@
 
     <!-- Assuming you want to host on @jenkinsci: -->
     <scm>
-        <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
+        <connection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
     </scm>
@@ -124,7 +110,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- Test dependencies -->
