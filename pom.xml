@@ -11,8 +11,6 @@
         <revision>1.0.0</revision>
         <changelist>999999-SNAPSHOT</changelist>
 
-        <jenkins-tools-bom.artifactId>bom-2.479.x</jenkins-tools-bom.artifactId>
-        <jenkins-tools-bom.version>3875.v1df09947cde6</jenkins-tools-bom.version>
         <lombok.version>1.18.30</lombok.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,6 +18,7 @@
         <!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
         <jenkins.baseline>2.479</jenkins.baseline>
         <jenkins.version>${jenkins.baseline}.3</jenkins.version>
+
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     </properties>
 
@@ -29,7 +28,7 @@
     <version>${revision}.${changelist}</version>
     <packaging>hpi</packaging>
     <description>A utility plugin providing various helper functions for Jenkins pipelines</description>
-    <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+    <url>https://github.com/${gitHubRepo}</url>
     <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
     <licenses>
         <license>
@@ -45,19 +44,26 @@
 
     <!-- Assuming you want to host on @jenkinsci: -->
     <scm>
-        <connection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+        <connection>scm:git:https://github.com/${gitHubRepo}</connection>
+        <developerConnection>scm:git:https://github.com/${gitHubRepo}</developerConnection>
+        <tag>${scmTag}</tag>
+        <url>https://github.com/${gitHubRepo}</url>
     </scm>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>${jenkins-tools-bom.artifactId}</artifactId>
-                <version>${jenkins-tools-bom.version}</version>
+                <artifactId>bom-${jenkins.baseline}.x</artifactId>
+                <version>4924.v6b_eb_a_79a_d9d0</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jenkins-ci.plugins</groupId>
+                <artifactId>list-git-branches-parameter</artifactId>
+                <version>0.0.13</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -66,7 +72,6 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>list-git-branches-parameter</artifactId>
-            <version>0.0.13</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
