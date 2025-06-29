@@ -1,0 +1,72 @@
+# Log Summary Configuration Example
+# This file demonstrates various configuration options for log analysis rules
+
+# Error patterns - match various error messages
+error:
+  search:
+    - /(?i)^error /
+    - /(?i)error:/
+    - /(?i)fatal error/
+    - /(?i)build failed/
+    - /(?i)compilation failed/
+    - /(?i)test failed/
+    - /(?i)assertion failed/
+  showName: Error
+
+# Warning patterns - match warning messages
+warning:
+  search:
+    - /[Ww]arning/
+    - /WARNING/
+    - /(?i)warning:/
+    - /(?i)deprecated/
+    - /(?i)deprecation/
+    - /(?i)unused/
+  showName: Warning
+
+# Information patterns - match info messages
+info:
+  search:
+    - /(?i)^info /
+    - /(?i)information:/
+    - /(?i)note:/
+    - /(?i)notice:/
+  showName: Information
+
+# Exception patterns - match exception stack traces
+exception:
+  search:
+    - /Exception/
+    - /Error/
+    - /Stack trace/
+    - /at .*\.java:/
+    - /Caused by:/
+  showName: Exception
+
+# Security patterns - match security-related messages
+security:
+  search:
+    - /(?i)security/
+    - /(?i)vulnerability/
+    - /(?i)authentication/
+    - /(?i)authorization/
+    - /(?i)permission denied/
+  showName: Security
+
+# Performance patterns - match performance-related messages
+performance:
+  search:
+    - /(?i)performance/
+    - /(?i)timeout/
+    - /(?i)slow/
+    - /(?i)memory leak/
+    - /(?i)out of memory/
+  showName: Performance
+
+# Custom patterns - example for specific application logs
+custom:
+  search:
+    - /MyApp:/
+    - /CustomError:/
+    - /BusinessLogic:/
+  showName: Custom 

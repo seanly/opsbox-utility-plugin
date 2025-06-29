@@ -1,0 +1,191 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Migration Scripts Guide
+
+## Overview
+
+The plugin includes migration scripts to help users upgrade from older versions. These scripts are located in the [migration-scripts/](mdc:migration-scripts/) directory and can be run in Jenkins Script Console.
+
+## Available Migration Scripts
+
+### Quick Migration
+- **File**: [quick-migration.groovy](mdc:migration-scripts/quick-migration.groovy)
+- **Purpose**: Fast migration for simple environments
+- **Use Case**: When you need a quick upgrade with minimal logging
+
+### Detailed Migration
+- **File**: [migration-script.groovy](mdc:migration-scripts/migration-script.groovy)
+- **Purpose**: Comprehensive migration with detailed logging
+- **Use Case**: Complex environments requiring detailed migration tracking
+
+### Parameter Migration
+- **File**: [parameter-migration-script.groovy](mdc:migration-scripts/parameter-migration-script.groovy)
+- **Purpose**: Migrate only parameter definitions
+- **Use Case**: When you only need to update parameter configurations
+
+## Running Migration Scripts
+
+### Prerequisites
+1. Ensure you have admin access to Jenkins
+2. Backup your Jenkins configuration before running migrations
+3. Test migration scripts in a non-production environment first
+
+### Execution Steps
+
+#### Method 1: Jenkins Script Console
+1. Go to **Manage Jenkins** → **Tools and Actions** → **Script Console**
+2. Copy the content of the desired migration script
+3. Paste into the script console
+4. Click **Run**
+
+#### Method 2: Load from File
+```groovy
+// Load and run quick migration
+load 'migration-scripts/quick-migration.groovy'
+
+// Load and run detailed migration
+load 'migration-scripts/migration-script.groovy'
+
+// Load and run parameter migration
+load 'migration-scripts/parameter-migration-script.groovy'
+```
+
+### Example Usage
+
+#### Quick Migration
+```groovy
+// Run quick migration with default settings
+load 'migration-scripts/quick-migration.groovy'
+```
+
+#### Detailed Migration with Custom Settings
+```groovy
+// Run detailed migration with custom logging
+load 'migration-scripts/migration-script.groovy'
+
+// The script will prompt for configuration options
+// - Backup location
+// - Logging level
+// - Migration scope
+```
+
+## Migration Process
+
+### What Gets Migrated
+
+#### Parameter Definitions
+- Job Build Name Parameter configurations
+- Parameter validation rules
+- Default values and descriptions
+
+#### Environment Variables
+- Git branch environment variable configurations
+- Repository URL mappings
+- Credential associations
+
+#### Job Configurations
+- Parameter bindings in existing jobs
+- Build configurations
+- Pipeline scripts (if applicable)
+
+### Migration Safety Features
+
+#### Backup Creation
+- Automatic backup of current configuration
+- Timestamped backup files
+- Rollback capability
+
+#### Validation
+- Pre-migration validation checks
+- Configuration integrity verification
+- Error reporting and logging
+
+#### Rollback
+- Automatic rollback on critical errors
+- Manual rollback procedures
+- Configuration restoration
+
+## Troubleshooting
+
+### Common Issues
+
+#### Script Execution Errors
+```groovy
+// Check script syntax
+println "Testing script execution..."
+
+// Verify file access
+def scriptFile = new File('migration-scripts/quick-migration.groovy')
+println "Script exists: ${scriptFile.exists()}"
+```
+
+#### Permission Issues
+- Ensure Jenkins has read access to migration scripts
+- Check file permissions on script files
+- Verify admin privileges in Jenkins
+
+#### Configuration Conflicts
+- Review migration logs for conflicts
+- Resolve configuration conflicts manually
+- Use detailed migration for better error reporting
+
+### Debug Commands
+
+#### Test Script Loading
+```groovy
+// Test if script can be loaded
+try {
+    load 'migration-scripts/quick-migration.groovy'
+    println "Script loaded successfully"
+} catch (Exception e) {
+    println "Error loading script: ${e.message}"
+}
+```
+
+#### Check Migration Status
+```groovy
+// Check current plugin version
+def plugin = Jenkins.instance.getPlugin('opsbox-utility')
+println "Current version: ${plugin?.version}"
+
+// Check migration status
+def migrationStatus = // migration status check logic
+println "Migration status: ${migrationStatus}"
+```
+
+## Best Practices
+
+### Before Migration
+1. **Backup**: Always backup Jenkins configuration
+2. **Test**: Run migration in test environment first
+3. **Review**: Review migration script content
+4. **Schedule**: Plan migration during maintenance window
+
+### During Migration
+1. **Monitor**: Watch migration progress and logs
+2. **Validate**: Verify each migration step
+3. **Document**: Record any manual interventions
+4. **Test**: Test functionality after migration
+
+### After Migration
+1. **Verify**: Confirm all configurations migrated correctly
+2. **Test**: Test plugin functionality thoroughly
+3. **Cleanup**: Remove old backup files if not needed
+4. **Document**: Update documentation with new features
+
+## Support
+
+### Getting Help
+- Check migration logs for detailed error information
+- Review [README.md](mdc:README.md) for usage examples
+- Consult [MIGRATION_GUIDE.md](mdc:MIGRATION_GUIDE.md) for detailed instructions
+- Open issues on GitHub for migration problems
+
+### Migration Logs
+Migration scripts generate detailed logs that can help troubleshoot issues:
+- **Location**: Jenkins system logs
+- **Level**: INFO, WARNING, ERROR
+- **Content**: Migration steps, errors, and results

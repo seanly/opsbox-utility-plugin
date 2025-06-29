@@ -152,5 +152,38 @@ public class JobBuildNameParameterDefinition extends SimpleParameterDefinition {
                 return FormValidation.ok();
             }
         }
+
+        public FormValidation doCheckCountLimit(@QueryParameter String countLimit) {
+            if (countLimit == null || countLimit.trim().isEmpty()) {
+                return FormValidation.ok();
+            }
+            
+            if (!isInteger(countLimit)) {
+                return FormValidation.error("Count limit must be a valid integer");
+            }
+            
+            int limit = Integer.parseInt(countLimit);
+            if (limit <= 0) {
+                return FormValidation.error("Count limit must be greater than 0");
+            }
+            
+            if (limit > 100) {
+                return FormValidation.warning("Large count limit may impact performance");
+            }
+            
+            return FormValidation.ok();
+        }
+
+        public boolean isInteger(String value) {
+            if (value == null || value.trim().isEmpty()) {
+                return false;
+            }
+            try {
+                Integer.parseInt(value.trim());
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
     }
 }

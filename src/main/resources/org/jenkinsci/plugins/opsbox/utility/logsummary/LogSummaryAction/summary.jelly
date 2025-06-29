@@ -1,0 +1,32 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core"
+         xmlns:t="/lib/hudson"
+>
+
+    <t:summary icon="document.png">
+        <h4>Log Summary Analysis</h4>
+
+        <j:if test="${it.hasResults()}">
+            <ul>
+                <j:forEach var="result" items="${it.results}">
+                    <j:if test="${result.count &gt; 0}">
+                        <li>${result.showName}: ${result.count} matches</li>
+                    </j:if>
+                </j:forEach>
+            </ul>
+
+            <j:forEach var="result" items="${it.results}">
+                <j:if test="${result.count &gt; 0}">
+                    <h5>${result.showName} (${result.count} matches)</h5>
+                    <pre>${result.logsAsString}</pre>
+                </j:if>
+            </j:forEach>
+        </j:if>
+
+        <j:if test="${!it.hasResults()}">
+            <p>No log analysis results available.</p>
+        </j:if>
+
+    </t:summary>
+
+</j:jelly> 

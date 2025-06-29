@@ -1,0 +1,62 @@
+<div>
+    <h3>Log Summary Configuration</h3>
+    <p>Configure log analysis rules in YAML format. The plugin will scan build logs and display matched lines in a summary table.</p>
+    
+    <h4>Configuration Format:</h4>
+    <ul>
+        <li><strong>Rule Name</strong>: The key name for the rule (e.g., "error", "warning")</li>
+        <li><strong>search</strong>: List of regex patterns to match log lines</li>
+        <li><strong>showName</strong>: Display name shown in the summary table</li>
+    </ul>
+    
+    <h4>Regex Pattern Tips:</h4>
+    <ul>
+        <li><code>(?i)</code> - Case insensitive matching</li>
+        <li><code>^</code> - Start of line</li>
+        <li><code>$</code> - End of line</li>
+        <li><code>.*</code> - Any characters</li>
+        <li><code>\.</code> - Literal dot (escaped)</li>
+    </ul>
+    
+    <h4>Examples:</h4>
+    <ul>
+        <li><code>/(?i)^error /</code> - Lines starting with "error " (case insensitive)</li>
+        <li><code>/[Ww]arning/</code> - Lines containing "Warning" or "warning"</li>
+        <li><code>/Exception/</code> - Lines containing "Exception"</li>
+        <li><code>/at .*\.java:/</code> - Stack trace lines with Java file references</li>
+    </ul>
+    
+    <h4>Example Configuration:</h4>
+    <pre style="background: #f5f5f5; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 12px;">
+error:
+  search:
+    - /(?i)^error /
+    - /(?i)error:/
+    - /(?i)fatal error/
+    - /(?i)build failed/
+    - /(?i)compilation failed/
+  showName: Error
+
+warning:
+  search:
+    - /[Ww]arning/
+    - /WARNING/
+    - /(?i)warning:/
+    - /(?i)deprecated/
+  showName: Warning
+
+info:
+  search:
+    - /(?i)^info /
+    - /(?i)information:/
+    - /(?i)note:/
+  showName: Information
+
+exception:
+  search:
+    - /Exception/
+    - /Error/
+    - /Stack trace/
+    - /at .*\.java:/
+  showName: Exception</pre>
+</div> 

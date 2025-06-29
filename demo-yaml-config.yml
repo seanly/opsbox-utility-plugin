@@ -1,0 +1,95 @@
+# Log Summary Demo Configuration
+# 这是一个演示配置文件，展示了各种日志分析规则的配置方法
+
+# 基础错误匹配
+error:
+  search:
+    - /(?i)^error /
+    - /(?i)error:/
+    - /(?i)fatal error/
+    - /(?i)build failed/
+    - /(?i)compilation failed/
+    - /(?i)test failed/
+  showName: Error
+
+# 警告信息匹配
+warning:
+  search:
+    - /[Ww]arning/
+    - /WARNING/
+    - /(?i)warning:/
+    - /(?i)deprecated/
+    - /(?i)deprecation/
+  showName: Warning
+
+# 信息日志匹配
+info:
+  search:
+    - /(?i)^info /
+    - /(?i)information:/
+    - /(?i)note:/
+    - /(?i)notice:/
+  showName: Information
+
+# 异常堆栈匹配
+exception:
+  search:
+    - /Exception/
+    - /Error/
+    - /Stack trace/
+    - /at .*\.java:/
+    - /Caused by:/
+    - /java\.lang\./
+  showName: Exception
+
+# 安全相关匹配
+security:
+  search:
+    - /(?i)security/
+    - /(?i)vulnerability/
+    - /(?i)authentication/
+    - /(?i)authorization/
+    - /(?i)permission denied/
+    - /(?i)access denied/
+  showName: Security
+
+# 性能相关匹配
+performance:
+  search:
+    - /(?i)performance/
+    - /(?i)timeout/
+    - /(?i)slow/
+    - /(?i)memory leak/
+    - /(?i)out of memory/
+    - /(?i)response time/
+  showName: Performance
+
+# 数据库相关匹配
+database:
+  search:
+    - /(?i)sql/
+    - /(?i)database/
+    - /(?i)connection/
+    - /(?i)query/
+    - /(?i)transaction/
+  showName: Database
+
+# 网络相关匹配
+network:
+  search:
+    - /(?i)network/
+    - /(?i)connection/
+    - /(?i)timeout/
+    - /(?i)http/
+    - /(?i)https/
+    - /(?i)api/
+  showName: Network
+
+# 自定义应用日志匹配
+custom:
+  search:
+    - /MyApp:/
+    - /CustomError:/
+    - /BusinessLogic:/
+    - /UserAction:/
+  showName: Custom Application 

@@ -1,0 +1,161 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Testing Guidelines
+
+## Test Structure
+
+### Test Organization
+Tests mirror the main source structure in [src/test/java/](mdc:src/test/java/):
+
+- **Test Suite**: [OpsboxUtilityPluginTestSuite.java](mdc:src/test/java/org/jenkinsci/plugins/opsbox/utility/OpsboxUtilityPluginTestSuite.java)
+- **Integration Tests**: [PluginIntegrationTest.java](mdc:src/test/java/org/jenkinsci/plugins/opsbox/utility/integration/PluginIntegrationTest.java)
+- **Parameter Tests**: [JobBuildNameParameterDefinitionTest.java](mdc:src/test/java/org/jenkinsci/plugins/opsbox/utility/parameter/JobBuildNameParameterDefinitionTest.java)
+- **Contributor Tests**: [ListGitBranchesEnvironmentContributorTest.java](mdc:src/test/java/org/jenkinsci/plugins/opsbox/utility/contributor/ListGitBranchesEnvironmentContributorTest.java)
+
+## Testing Patterns
+
+### Jenkins Plugin Testing
+Use Jenkins test harness for plugin testing:
+
+```java
+@Rule
+public JenkinsRule jenkins = new JenkinsRule();
+
+@Test
+public void testParameterDefinition() {
+    // Test parameter definition functionality
+}
+```
+
+### Parameter Definition Testing
+Follow the pattern in [JobBuildNameParameterDefinitionTest.java](mdc:src/test/java/org/jenkinsci/plugins/opsbox/utility/parameter/JobBuildNameParameterDefinitionTest.java):
+
+```java
+@Test
+public void testParameterCreation() {
+    // Test parameter creation and validation
+}
+
+@Test
+public void testParameterValidation() {
+    // Test form validation
+}
+
+@Test
+public void testParameterValues() {
+    // Test parameter value handling
+}
+```
+
+### Environment Contributor Testing
+Follow the pattern in [ListGitBranchesEnvironmentContributorTest.java](mdc:src/test/java/org/jenkinsci/plugins/opsbox/utility/contributor/ListGitBranchesEnvironmentContributorTest.java):
+
+```java
+@Test
+public void testEnvironmentVariables() {
+    // Test environment variable contribution
+}
+
+@Test
+public void testBranchNameCleaning() {
+    // Test branch name processing
+}
+```
+
+## Test Dependencies
+
+### Required Dependencies
+- **Jenkins Test Harness**: Provided by parent POM
+- **Mockito**: For mocking dependencies
+- **JUnit**: For test framework
+
+### Workflow Testing Dependencies
+- **workflow-step-api**: Pipeline step testing
+- **workflow-cps**: Pipeline CPS testing
+- **workflow-job**: Pipeline job testing
+- **workflow-basic-steps**: Basic pipeline steps
+- **workflow-durable-task-step**: Durable task steps
+- **workflow-api**: Pipeline API testing
+- **workflow-support**: Pipeline support testing
+
+## Testing Best Practices
+
+### Test Naming
+- Use descriptive test method names
+- Follow pattern: `test[Feature][Scenario]`
+- Group related tests in test classes
+
+### Test Coverage
+- Test all public methods
+- Test both positive and negative scenarios
+- Test edge cases and error conditions
+- Test UI validation methods
+
+### Mocking
+- Mock external dependencies
+- Use `@Mock` and `@InjectMocks` annotations
+- Verify mock interactions when necessary
+
+### Assertions
+- Use appropriate assertion methods
+- Provide meaningful assertion messages
+- Test multiple aspects of results
+
+### Test Data
+- Use realistic test data
+- Create helper methods for common test setup
+- Use `@Before` and `@After` methods for setup/cleanup
+
+## Running Tests
+
+### Command Line
+```bash
+# Run all tests
+mvn test
+
+# Run specific test class
+mvn test -Dtest=JobBuildNameParameterDefinitionTest
+
+# Run specific test method
+mvn test -Dtest=JobBuildNameParameterDefinitionTest#testParameterCreation
+
+# Run with debug output
+mvn test -X
+```
+
+### IDE Integration
+- Configure IDE to use Maven test classpath
+- Set up test run configurations
+- Enable test coverage reporting
+
+## Test Reports
+
+### Generated Reports
+- **Surefire Reports**: `target/surefire-reports/`
+- **Test Results**: `target/test-results/`
+- **Coverage Reports**: `target/site/jacoco/` (if configured)
+
+### Continuous Integration
+- Tests run automatically on CI/CD
+- Test results reported to build system
+- Coverage metrics tracked over time
+
+## Troubleshooting
+
+### Common Test Issues
+- **Jenkins Rule Setup**: Ensure proper Jenkins test environment
+- **Mock Configuration**: Verify mock setup and expectations
+- **Test Isolation**: Ensure tests don't interfere with each other
+- **Resource Cleanup**: Clean up resources in `@After` methods
+
+### Debug Commands
+```bash
+# Run tests with debug logging
+mvn test -Dorg.slf4j.simpleLogger.defaultLogLevel=debug
+
+# Run single test with verbose output
+mvn test -Dtest=TestClass#testMethod -X
+```

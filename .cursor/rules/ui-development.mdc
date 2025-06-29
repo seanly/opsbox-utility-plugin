@@ -1,0 +1,158 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# UI Development Guidelines
+
+## Jelly Templates
+
+### Template Structure
+Jelly templates are located in [src/main/resources/](mdc:src/main/resources/) and follow Jenkins plugin conventions:
+
+### Parameter Configuration UI
+- **Config Template**: [config.jelly](mdc:src/main/resources/org/jenkinsci/plugins/opsbox/utility/parameter/JobBuildNameParameterDefinition/config.jelly)
+- **Index Template**: [index.jelly](mdc:src/main/resources/org/jenkinsci/plugins/opsbox/utility/parameter/JobBuildNameParameterDefinition/index.jelly)
+- **Plugin Index**: [index.jelly](mdc:src/main/resources/index.jelly)
+
+### Jelly Template Patterns
+
+#### Parameter Configuration Form
+```xml
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:entry title="${%Name}" field="name">
+        <f:textbox />
+    </f:entry>
+    
+    <f:entry title="${%Job Name}" field="jobName">
+        <f:textbox />
+    </f:entry>
+    
+    <f:entry title="${%Count Limit}" field="countLimit">
+        <f:number default="5" />
+    </f:entry>
+    
+    <f:entry title="${%Description}" field="description">
+        <f:textarea />
+    </f:entry>
+</j:jelly>
+```
+
+#### Form Validation
+```xml
+<f:validateButton title="${%Validate}" 
+                  progress="${%Validating...}" 
+                  method="doCheckJobName" 
+                  with="jobName" />
+```
+
+### Resource Organization
+
+#### Properties Files
+- **Parameter Properties**: [JobBuildNameParameterDefinition.properties](mdc:src/main/resources/org/jenkinsci/plugins/opsbox/utility/parameter/JobBuildNameParameterDefinition.properties)
+- **Messages**: [Messages.properties](mdc:src/main/resources/org/jenkinsci/plugins/opsbox/utility/parameter/Messages.properties)
+
+#### Properties File Structure
+```properties
+# Parameter display name
+displayName=Job Build Name Parameter
+
+# Form field labels
+Name=Name
+Job Name=Job Name
+Count Limit=Count Limit
+Description=Description
+
+# Validation messages
+error.jobNotFound=Job not found
+error.invalidCount=Invalid count limit
+```
+
+## UI Best Practices
+
+### Form Design
+- Use consistent field ordering
+- Provide clear labels and descriptions
+- Include validation feedback
+- Use appropriate input types (textbox, textarea, number, etc.)
+
+### Validation
+- Implement client-side validation with Jelly
+- Provide server-side validation in Java code
+- Show meaningful error messages
+- Use `FormValidation` for validation results
+
+### Internationalization
+- Use resource bundles for all UI text
+- Support multiple languages
+- Use `${%key}` syntax in Jelly templates
+- Keep keys descriptive and organized
+
+### Accessibility
+- Use semantic HTML elements
+- Provide proper labels for form fields
+- Include ARIA attributes when needed
+- Ensure keyboard navigation support
+
+## Resource File Management
+
+### Properties File Organization
+```
+src/main/resources/
+├── index.jelly                                    # Plugin description
+└── org/jenkinsci/plugins/opsbox/utility/
+    └── parameter/
+        └── JobBuildNameParameterDefinition/
+            ├── config.jelly                       # Parameter config UI
+            ├── index.jelly                        # Parameter description
+            ├── JobBuildNameParameterDefinition.properties  # UI text
+            └── Messages.properties                # Messages
+```
+
+### Naming Conventions
+- **Config Templates**: `config.jelly`
+- **Index Templates**: `index.jelly`
+- **Properties Files**: `ClassName.properties` or `Messages.properties`
+- **Resource Bundles**: Use class name or descriptive names
+
+## Development Workflow
+
+### Template Development
+1. Create Jelly template in appropriate directory
+2. Add corresponding properties file for UI text
+3. Test template in Jenkins development environment
+4. Validate form behavior and styling
+
+### Testing UI Components
+```bash
+# Start Jenkins with plugin for UI testing
+mvn hpi:run
+
+# Access Jenkins at http://localhost:8080/jenkins
+# Navigate to job configuration to test parameter UI
+```
+
+### Debugging UI Issues
+- Check browser developer tools for JavaScript errors
+- Verify Jelly template syntax
+- Check properties file for missing keys
+- Validate form submission and validation
+
+## Styling and Layout
+
+### Jenkins UI Integration
+- Use Jenkins standard CSS classes
+- Follow Jenkins UI patterns and conventions
+- Maintain consistency with Jenkins interface
+- Test in different Jenkins themes
+
+### Responsive Design
+- Ensure forms work on different screen sizes
+- Use appropriate field widths
+- Test on mobile devices when relevant
+
+### Custom Styling
+- Minimize custom CSS
+- Use Jenkins CSS variables when available
+- Test with different Jenkins themes
+- Ensure accessibility compliance

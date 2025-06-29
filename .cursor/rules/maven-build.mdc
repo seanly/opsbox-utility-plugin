@@ -1,0 +1,131 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Maven Build Configuration
+
+## Project Configuration
+
+The project uses the Jenkins plugin parent POM defined in [pom.xml](mdc:pom.xml):
+
+### Key Properties
+- **Jenkins Baseline**: 2.479+ (minimum supported Jenkins version)
+- **Java Version**: 11+ (inherited from parent)
+- **Plugin Version**: 1.0.0-SNAPSHOT (using revision/changelist pattern)
+- **Encoding**: UTF-8
+
+### Parent POM
+```xml
+<parent>
+    <groupId>org.jenkins-ci.plugins</groupId>
+    <artifactId>plugin</artifactId>
+    <version>5.9</version>
+</parent>
+```
+
+## Dependencies
+
+### Core Dependencies
+- **list-git-branches-parameter**: Required for Git branch functionality
+- **structs**: Jenkins plugin structure support
+- **lombok**: Reduces boilerplate code (scope: provided)
+
+### Test Dependencies
+- **workflow-step-api**: Pipeline step API testing
+- **workflow-cps**: Pipeline CPS testing
+- **workflow-job**: Pipeline job testing
+- **workflow-basic-steps**: Basic pipeline steps testing
+- **workflow-durable-task-step**: Durable task steps testing
+- **workflow-api**: Pipeline API testing
+- **workflow-support**: Pipeline support testing
+- **mockito-core**: Mocking framework
+- **cloudbees-folder**: Folder support testing
+
+### Dependency Management
+Uses Jenkins BOM (Bill of Materials) for consistent dependency versions:
+```xml
+<dependency>
+    <groupId>io.jenkins.tools.bom</groupId>
+    <artifactId>bom-2.479.x</artifactId>
+    <version>4948.vcf1d17350668</version>
+</dependency>
+```
+
+## Build Lifecycle
+
+### Development Commands
+```bash
+# Clean and compile
+mvn clean compile
+
+# Run tests
+mvn test
+
+# Run in development mode (starts Jenkins with plugin)
+mvn hpi:run
+
+# Package plugin (.hpi file)
+mvn clean package
+
+# Install to local repository
+mvn clean install
+```
+
+### Release Commands
+```bash
+# Prepare release
+mvn release:prepare
+
+# Perform release
+mvn release:perform
+```
+
+## Repository Configuration
+
+### Maven Repositories
+- **Jenkins Public Repository**: `https://repo.jenkins-ci.org/public/`
+- Used for both dependencies and plugin releases
+
+### Plugin Repositories
+- **Jenkins Plugin Repository**: `https://repo.jenkins-ci.org/public/`
+- Used for plugin dependencies
+
+## Build Artifacts
+
+### Primary Artifact
+- **Type**: `hpi` (Jenkins Plugin)
+- **Name**: `opsbox-utility-1.0.0-SNAPSHOT.hpi`
+- **Location**: `target/` directory
+
+### Generated Files
+- **Plugin Index**: `target/classes/index.jelly`
+- **Resource Bundles**: `target/classes/org/jenkinsci/plugins/opsbox/utility/`
+- **Test Reports**: `target/surefire-reports/`
+
+## Development Workflow
+
+1. **Setup**: Clone repository and run `mvn clean compile`
+2. **Development**: Use `mvn hpi:run` for development testing
+3. **Testing**: Run `mvn test` before committing changes
+4. **Packaging**: Use `mvn clean package` to create distributable plugin
+5. **Release**: Use `mvn release:prepare release:perform` for releases
+
+## Troubleshooting
+
+### Common Issues
+- **Version Conflicts**: Check BOM version compatibility
+- **Test Failures**: Ensure Jenkins test environment is properly configured
+- **Build Failures**: Verify Java version and Maven settings
+
+### Debug Commands
+```bash
+# Debug compilation
+mvn clean compile -X
+
+# Debug tests
+mvn test -X
+
+# Skip tests
+mvn clean package -DskipTests
+```

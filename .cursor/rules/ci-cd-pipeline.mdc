@@ -1,0 +1,252 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# CI/CD Pipeline Configuration
+
+## Jenkins Pipeline
+
+The project uses a [Jenkinsfile](mdc:Jenkinsfile) for continuous integration and deployment. This file defines the automated build, test, and deployment process.
+
+## Pipeline Structure
+
+### Pipeline Stages
+The Jenkinsfile typically includes the following stages:
+
+1. **Checkout**: Clone the repository
+2. **Build**: Compile the Java code
+3. **Test**: Run unit and integration tests
+4. **Package**: Create the plugin artifact
+5. **Deploy**: Deploy to staging/production (if applicable)
+
+### Pipeline Configuration
+```groovy
+pipeline {
+    agent any
+    
+    tools {
+        maven 'Maven 3.8.6'
+        jdk 'JDK 11'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    publishTestResults testResultsPattern: '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+        
+        stage('Package') {
+            steps {
+                sh 'mvn clean package'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'target/*.hpi', fingerprint: true
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
+```
+
+## Build Configuration
+
+### Maven Configuration
+- **Build Tool**: Maven 3.8.6+
+- **Java Version**: JDK 11
+- **Plugin Type**: HPI (Jenkins Plugin)
+
+### Build Commands
+```bash
+# Clean and compile
+mvn clean compile
+
+# Run tests
+mvn test
+
+# Package plugin
+mvn clean package
+
+# Install to local repository
+mvn clean install
+
+# Run in development mode
+mvn hpi:run
+```
+
+## Testing Strategy
+
+### Unit Tests
+- **Framework**: JUnit 4/5
+- **Mocking**: Mockito
+- **Coverage**: Aim for >80% code coverage
+- **Reports**: Surefire reports in `target/surefire-reports/`
+
+### Integration Tests
+- **Framework**: Jenkins Test Harness
+- **Scope**: Plugin integration with Jenkins
+- **Environment**: Isolated Jenkins instance
+
+### Test Execution
+```bash
+# Run all tests
+mvn test
+
+# Run specific test class
+mvn test -Dtest=JobBuildNameParameterDefinitionTest
+
+# Run with coverage
+mvn test jacoco:report
+```
+
+## Artifact Management
+
+### Plugin Artifacts
+- **Primary**: `target/opsbox-utility-1.0.0-SNAPSHOT.hpi`
+- **Sources**: `target/opsbox-utility-1.0.0-SNAPSHOT-sources.jar`
+- **Javadoc**: `target/opsbox-utility-1.0.0-SNAPSHOT-javadoc.jar`
+
+### Artifact Storage
+- **Local Repository**: Maven local repository
+- **Remote Repository**: Jenkins plugin repository (for releases)
+- **Archive**: Jenkins build artifacts
+
+## Quality Gates
+
+### Code Quality
+- **Static Analysis**: SonarQube integration
+- **Code Coverage**: Minimum 80% coverage
+- **Code Style**: Checkstyle compliance
+- **Security**: OWASP dependency check
+
+### Build Quality
+- **Compilation**: Must compile without errors
+- **Tests**: All tests must pass
+- **Packaging**: Must create valid HPI file
+- **Dependencies**: No security vulnerabilities
+
+## Deployment Strategy
+
+### Development Deployment
+```bash
+# Deploy to development Jenkins
+mvn hpi:run
+```
+
+### Staging Deployment
+```bash
+# Deploy to staging environment
+mvn clean package
+# Manual upload to staging Jenkins
+```
+
+### Production Deployment
+```bash
+# Create release
+mvn release:prepare release:perform
+
+# Deploy to Jenkins plugin repository
+# Automated via CI/CD pipeline
+```
+
+## Environment Configuration
+
+### Development Environment
+- **Jenkins Version**: 2.479+
+- **Java Version**: 11
+- **Maven Version**: 3.8.6+
+- **Access**: Local development
+
+### CI/CD Environment
+- **Jenkins Version**: Latest LTS
+- **Java Version**: 11
+- **Maven Version**: 3.8.6+
+- **Access**: Automated builds
+
+### Production Environment
+- **Jenkins Version**: Latest LTS
+- **Java Version**: 11
+- **Maven Version**: 3.8.6+
+- **Access**: Jenkins plugin repository
+
+## Monitoring and Logging
+
+### Build Monitoring
+- **Build Status**: Success/Failure tracking
+- **Build Duration**: Performance monitoring
+- **Test Results**: Test execution tracking
+- **Artifact Generation**: Artifact creation verification
+
+### Logging
+- **Build Logs**: Maven build output
+- **Test Logs**: Test execution details
+- **Error Logs**: Build failure analysis
+- **Deployment Logs**: Deployment status
+
+## Troubleshooting
+
+### Common Build Issues
+- **Dependency Conflicts**: Check Maven dependency tree
+- **Test Failures**: Review test logs and environment
+- **Compilation Errors**: Check Java version compatibility
+- **Packaging Issues**: Verify plugin structure
+
+### Debug Commands
+```bash
+# Debug Maven build
+mvn clean compile -X
+
+# Debug test execution
+mvn test -X
+
+# Check dependency tree
+mvn dependency:tree
+
+# Verify plugin structure
+mvn validate
+```
+
+## Best Practices
+
+### Pipeline Design
+1. **Modularity**: Break pipeline into reusable stages
+2. **Error Handling**: Implement proper error handling
+3. **Parallelization**: Use parallel stages where possible
+4. **Caching**: Cache dependencies for faster builds
+
+### Quality Assurance
+1. **Automated Testing**: Run tests on every build
+2. **Code Review**: Require code review for changes
+3. **Security Scanning**: Scan for vulnerabilities
+4. **Performance Monitoring**: Track build performance
+
+### Deployment Safety
+1. **Rollback Plan**: Have rollback procedures ready
+2. **Staging Testing**: Test in staging before production
+3. **Gradual Rollout**: Deploy to subset of users first
+4. **Monitoring**: Monitor deployment health
