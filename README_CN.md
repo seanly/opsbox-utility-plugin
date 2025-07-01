@@ -108,27 +108,7 @@ pipeline {
 }
 ```
 
-## 迁移指南
 
-如果你正在从旧版本插件迁移，请使用提供的迁移脚本：
-
-### 快速迁移
-```groovy
-// 在 Jenkins 脚本控制台中运行
-load 'migration-scripts/quick-migration.groovy'
-```
-
-### 详细迁移
-```groovy
-// 用于复杂环境的详细日志记录
-load 'migration-scripts/migration-script.groovy'
-```
-
-### 仅参数迁移
-```groovy
-// 仅迁移参数定义
-load 'migration-scripts/parameter-migration-script.groovy'
-```
 
 ## 系统要求
 
@@ -182,13 +162,7 @@ mvn release:prepare release:perform
 
 **Seanly Liu** - [seanly.me@gmail.com](mailto:seanly.me@gmail.com)
 
-## 更新日志
 
-### 版本 1.0.0
-- 初始发布
-- 任务构建名称参数定义
-- Git 分支环境变量
-- 从旧版本升级的迁移脚本
 
 ## 常见问题
 
@@ -197,9 +171,6 @@ A: 使用完整路径，例如 `folder1/folder2/job-name`。
 
 ### Q: 为什么看不到构建名称选项？
 A: 确保源任务存在且有成功的构建记录。
-
-### Q: 迁移脚本运行失败怎么办？
-A: 检查 Jenkins 日志，确保有管理员权限，并参考 MIGRATION_GUIDE.md。
 
 ### Q: 环境变量没有设置怎么办？
 A: 确保安装了 List Git Branches Parameter 插件，并且参数配置正确。

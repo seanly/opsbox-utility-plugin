@@ -108,27 +108,7 @@ pipeline {
 }
 ```
 
-## Migration Guide
 
-If you're migrating from an older version of the plugin, use the provided migration scripts:
-
-### Quick Migration
-```groovy
-// Run this in Jenkins Script Console
-load 'migration-scripts/quick-migration.groovy'
-```
-
-### Detailed Migration
-```groovy
-// For complex environments with detailed logging
-load 'migration-scripts/migration-script.groovy'
-```
-
-### Parameter-Only Migration
-```groovy
-// For migrating only parameter definitions
-load 'migration-scripts/parameter-migration-script.groovy'
-```
 
 ## Requirements
 
@@ -178,17 +158,26 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Documentation**: [Jenkins Plugin Documentation](https://plugins.jenkins.io/opsbox-utility-plugin/)
 - **Community**: [Jenkins Community](https://www.jenkins.io/chat/)
 
+## FAQ
+
+### Q: How do I handle jobs in folders?
+A: Use the full path, for example `folder1/folder2/job-name`.
+
+### Q: Why can't I see build name options?
+A: Make sure the source job exists and has successful build records.
+
+
+
+### Q: What if environment variables are not set?
+A: Make sure the List Git Branches Parameter plugin is installed and the parameter configuration is correct.
+
+
+
 ## Author
 
 **Seanly Liu** - [seanly.me@gmail.com](mailto:seanly.me@gmail.com)
 
-## Changelog
 
-### Version 1.0.0
-- Initial release
-- Job Build Name Parameter Definition
-- Git Branches Environment Variables
-- Migration scripts for upgrading from older versions
 
 ---
 
