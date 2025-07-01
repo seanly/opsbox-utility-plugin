@@ -137,8 +137,8 @@ public class JobBuildNameParameterDefinition extends SimpleParameterDefinition {
         }
 
         @POST
-        public FormValidation doCheckJobName(@QueryParameter String jobName) {
-            Jenkins.get().checkPermission(Item.READ);
+        public FormValidation doCheckJobName(@QueryParameter String jobName, @AncestorInPath Item item) {
+            item.checkPermission(Item.READ);
 
             String errorMsg = "Job doesn't exist.";
 
