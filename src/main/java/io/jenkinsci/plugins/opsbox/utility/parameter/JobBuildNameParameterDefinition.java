@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.opsbox.utility.parameter;
+package io.jenkinsci.plugins.opsbox.utility.parameter;
 
 import hudson.Extension;
 import hudson.model.*;
@@ -13,6 +13,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
+import org.kohsuke.stapler.verb.POST;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -100,7 +101,7 @@ public class JobBuildNameParameterDefinition extends SimpleParameterDefinition {
     @Exported
     public List<String> getChoices() {
         List<String> choices = getBuildNames(this.jobName, this.countLimit);
-        if (choices.size() == 0) {
+        if (choices.isEmpty()) {
             choices.add(DEFAULT_BUILD_NAME);
         }
 
@@ -135,7 +136,10 @@ public class JobBuildNameParameterDefinition extends SimpleParameterDefinition {
             return Messages.JobBuildNameParameterDefinition_DisplayName();
         }
 
+        @POST
         public FormValidation doCheckJobName(@QueryParameter String jobName) {
+            Jenkins.get().checkPermission(Item.READ);
+
             String errorMsg = "Job doesn't exist.";
 
             Job job = JobBuildNameParameterDefinition.find(jobName, Job.class);

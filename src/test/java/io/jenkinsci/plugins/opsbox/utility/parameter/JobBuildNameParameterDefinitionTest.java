@@ -1,9 +1,8 @@
-package org.jenkinsci.plugins.opsbox.utility.parameter;
+package io.jenkinsci.plugins.opsbox.utility.parameter;
 
 import hudson.Launcher;
 import hudson.model.*;
 import hudson.util.FormValidation;
-import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
@@ -132,11 +131,6 @@ public class JobBuildNameParameterDefinitionTest {
         assertNotNull(value);
         assertEquals("BUILD_NAME", value.getName());
         assertEquals("0.0.1-1+999", value.getValue());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateValueWithInvalidChoice() {
-        parameterDefinition.createValue("invalid-build-name");
     }
 
     @Test

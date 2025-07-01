@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.opsbox.utility.contributor;
+package io.jenkinsci.plugins.opsbox.utility.contributor;
 
 import com.syhuang.hudson.plugins.listgitbranchesparameter.ListGitBranchesParameterDefinition;
 import com.syhuang.hudson.plugins.listgitbranchesparameter.ListGitBranchesParameterValue;
@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;

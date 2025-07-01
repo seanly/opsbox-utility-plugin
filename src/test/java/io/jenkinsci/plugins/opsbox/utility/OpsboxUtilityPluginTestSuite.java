@@ -1,8 +1,8 @@
-package org.jenkinsci.plugins.opsbox.utility;
+package io.jenkinsci.plugins.opsbox.utility;
 
-import org.jenkinsci.plugins.opsbox.utility.contributor.ListGitBranchesEnvironmentContributorTest;
-import org.jenkinsci.plugins.opsbox.utility.integration.PluginIntegrationTest;
-import org.jenkinsci.plugins.opsbox.utility.parameter.JobBuildNameParameterDefinitionTest;
+import io.jenkinsci.plugins.opsbox.utility.contributor.ListGitBranchesEnvironmentContributorTest;
+import io.jenkinsci.plugins.opsbox.utility.integration.PluginIntegrationTest;
+import io.jenkinsci.plugins.opsbox.utility.parameter.JobBuildNameParameterDefinitionTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -19,4 +19,4 @@ import org.junit.runners.Suite;
 public class OpsboxUtilityPluginTestSuite {
     // 测试套件不需要实现体，注解配置即可
     // Test suite doesn't need implementation body, annotation configuration is sufficient
-} 
+}

@@ -1,8 +1,8 @@
-package org.jenkinsci.plugins.opsbox.utility.integration;
+package io.jenkinsci.plugins.opsbox.utility.integration;
 
-import hudson.EnvVars;
 import hudson.model.*;
-import org.jenkinsci.plugins.opsbox.utility.parameter.JobBuildNameParameterDefinition;
+import io.jenkinsci.plugins.opsbox.utility.contributor.ListGitBranchesEnvironmentContributor;
+import io.jenkinsci.plugins.opsbox.utility.parameter.JobBuildNameParameterDefinition;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -169,16 +169,16 @@ public class PluginIntegrationTest {
         // 这里只测试核心功能，实际的集成测试需要在真实环境中进行
 
         // 测试分支名称清理功能
-        String cleanedName = org.jenkinsci.plugins.opsbox.utility.contributor.ListGitBranchesEnvironmentContributor
+        String cleanedName = ListGitBranchesEnvironmentContributor
             .cleanBranchName("refs/heads/feature/test");
         assertEquals("feature/test", cleanedName);
 
-        cleanedName = org.jenkinsci.plugins.opsbox.utility.contributor.ListGitBranchesEnvironmentContributor
+        cleanedName = ListGitBranchesEnvironmentContributor
             .cleanBranchName("refs/tags/v1.0.0");
         assertEquals("v1.0.0", cleanedName);
 
         // 测试已经清理的分支名称
-        cleanedName = org.jenkinsci.plugins.opsbox.utility.contributor.ListGitBranchesEnvironmentContributor
+        cleanedName = ListGitBranchesEnvironmentContributor
             .cleanBranchName("master");
         assertEquals("master", cleanedName);
     }
