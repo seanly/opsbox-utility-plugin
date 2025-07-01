@@ -84,12 +84,12 @@ public class PluginIntegrationTest {
         // 测试有效的作业名称
         assertEquals("Valid job should pass validation",
             hudson.util.FormValidation.Kind.OK,
-            descriptor.doCheckJobName("validation-source").kind);
+            descriptor.doCheckJobName("validation-source", sourceJob).kind);
 
         // 测试无效的作业名称
         assertEquals("Invalid job should fail validation",
             hudson.util.FormValidation.Kind.ERROR,
-            descriptor.doCheckJobName("non-existent-job").kind);
+            descriptor.doCheckJobName("non-existent-job", sourceJob).kind);
     }
 
     @Test

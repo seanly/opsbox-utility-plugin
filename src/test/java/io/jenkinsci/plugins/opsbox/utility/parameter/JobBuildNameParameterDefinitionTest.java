@@ -163,11 +163,11 @@ public class JobBuildNameParameterDefinitionTest {
             new JobBuildNameParameterDefinition.DescriptorImpl();
 
         // 测试存在的作业
-        FormValidation validation = descriptor.doCheckJobName("source-job");
+        FormValidation validation = descriptor.doCheckJobName("source-job", sourceJob);
         assertEquals(FormValidation.Kind.OK, validation.kind);
 
         // 测试不存在的作业
-        validation = descriptor.doCheckJobName("non-existent-job");
+        validation = descriptor.doCheckJobName("non-existent-job", sourceJob);
         assertEquals(FormValidation.Kind.ERROR, validation.kind);
     }
 
