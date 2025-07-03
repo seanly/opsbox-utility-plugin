@@ -11,6 +11,7 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.*;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.verb.POST;
+import org.acegisecurity.AccessDeniedException;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -73,6 +74,18 @@ public class JobBuildNameParameterDefinition extends SimpleParameterDefinition {
 
     private static List<String> getBuildNames(String jobName, int countLimit) {
         Job job = find(jobName, Job.class);
+        if (job == null) {
+            return new ArrayList<>();
+        }
+        
+        // Check permissions on the target job
+        try {
+            job.checkPermission(Item.READ);
+        } catch (AccessDeniedException e) {
+            LOG.warning("No permission to access job '" + jobName + "': " + e.getMessage());
+            return new ArrayList<>();
+        }
+        
         List<String> buildNames = new ArrayList<>();
         RunList<Run> runList = job.getBuilds().newBuilds();
 
@@ -135,15 +148,19 @@ public class JobBuildNameParameterDefinition extends SimpleParameterDefinition {
 
         @POST
         public FormValidation doCheckJobName(@QueryParameter String jobName, @AncestorInPath Item item) {
-            item.checkPermission(Item.READ);
-
             String errorMsg = "Job doesn't exist.";
 
             Job job = JobBuildNameParameterDefinition.find(jobName, Job.class);
             if (job == null) {
                 return FormValidation.error(errorMsg);
-            } else {
+            }
+            
+            // Check permissions on the target job, not the current context
+            try {
+                job.checkPermission(Item.READ);
                 return FormValidation.ok();
+            } catch (AccessDeniedException e) {
+                return FormValidation.error("No permission to access job '" + jobName + "'");
             }
         }
     }
